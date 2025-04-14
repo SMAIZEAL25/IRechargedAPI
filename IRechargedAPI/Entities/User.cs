@@ -2,7 +2,7 @@
 {
     public class User
     {
-        public Guid UserId { get; set; }
+        public Guid Id { get; set; }
 
         public required string UserName { get; set; }
 
@@ -15,5 +15,7 @@
         public required string PhoneNumber { get; set; }
 
         public DateTime DateCreated { get; set; }
+
+        public string IdentityUserId { get; set; }
     }
 }

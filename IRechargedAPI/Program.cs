@@ -87,7 +87,7 @@ builder.Services.AddMemoryCache();
 // CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", builder =>
+    options.AddPolicy("HealthChecks", builder =>
     {
         builder.AllowAnyOrigin()
                .AllowAnyMethod()
@@ -115,7 +115,9 @@ builder.Services.AddHealthChecksUI(options =>
     options.AddHealthCheckEndpoint("API", "/health");
     options.AddHealthCheckEndpoint("Main DB", "/health/maindb");
     options.AddHealthCheckEndpoint("Auth DB", "/health/authdb");
-    options.SetEvaluationTimeInSeconds(30);
+    options.SetEvaluationTimeInSeconds(10);
+    options.SetApiMaxActiveRequests(1);
+    options.MaximumHistoryEntriesPerEndpoint(50);
 })
 .AddSqlServerStorage(builder.Configuration.GetConnectionString("HealthChecksUI"));
 
@@ -162,7 +164,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseCors("AllowAll");
+app.UseCors("HealthChecks");
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -189,7 +191,7 @@ app.MapHealthChecksUI(options =>
 {
     options.UIPath = "/health-ui";
     options.ApiPath = "/health-api";
-});
+}); // Add .RequireAuthorization() for productions
 
 app.MapControllers();
 

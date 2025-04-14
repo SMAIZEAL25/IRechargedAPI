@@ -1,4 +1,5 @@
-﻿using IRecharge_API.Entities;
+﻿using IRecharge_API.DTO;
+using IRecharge_API.Entities;
 
 namespace IRecharge_API.DAL
 {
@@ -11,6 +12,8 @@ namespace IRecharge_API.DAL
         User GetUserById(Guid id);
 
         User GetByUserName(string userName);
+
+        void SaveChange(User registerUserDTO);
 
     }
 }
