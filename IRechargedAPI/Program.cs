@@ -130,6 +130,11 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 6;
     options.Password.RequiredUniqueChars = 1;
+    //options.User.RequireUniqueEmail = true;
+    //options.SignIn.RequireConfirmedAccount = false;
+    //options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    //options.Lockout.AllowedForNewUsers = true;
+    //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
 });
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
