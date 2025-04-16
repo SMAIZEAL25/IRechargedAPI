@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace IRecharge_API.Migrations.IRechargeAuthDBMigrations
+namespace IRechargedAPI.Migrations
 {
     [DbContext(typeof(IRechargeAuthDB))]
     partial class IRechargeAuthDBModelSnapshot : ModelSnapshot

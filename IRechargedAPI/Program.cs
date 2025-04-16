@@ -1,4 +1,4 @@
-using IRecharge_API.BLL;
+﻿using IRecharge_API.BLL;
 using IRecharge_API.DAL;
 using IRecharge_API.ExternalServices;
 using Microsoft.AspNetCore.Identity;
@@ -79,7 +79,7 @@ builder.Services.AddHttpClient("DigitalVendorsUrl", client =>
 builder.Host.UseSerilog((ctx, lc) => lc
     .WriteTo.Console()
     .ReadFrom.Configuration(ctx.Configuration)
-    // ?? Add just this one line to block health check logs
+    // 👇 Add just this one line to block health check logs
     .MinimumLevel.Override("Microsoft.AspNetCore.Diagnostics.HealthChecks", LogEventLevel.Fatal)
 );
 
@@ -123,12 +123,12 @@ builder.Services.AddHealthChecks()
 // Identity
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 6;
-    options.Password.RequiredUniqueChars = 1;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 9;
+    options.Password.RequiredUniqueChars = 2;
     //options.User.RequireUniqueEmail = true;
     //options.SignIn.RequireConfirmedAccount = false;
     //options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";

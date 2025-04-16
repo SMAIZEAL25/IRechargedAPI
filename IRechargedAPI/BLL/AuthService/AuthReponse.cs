@@ -10,6 +10,6 @@ namespace IRechargedAPI.BLL.AuthService
 
         public decimal WalletBalance { get; set; }
         public required string PhoneNumber { get; set; }
-        public required string EmailConfirmationToken { get; set; }
+        //public required string EmailConfirmationToken { get; set; }
     }
 }

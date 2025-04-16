@@ -1,5 +1,6 @@
 ﻿using IRecharge_API.BLL.AuthService;
 using IRecharge_API.DTO;
+using IRechargedAPI.BLL.AuthService;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,23 +18,20 @@ namespace IRechargedAPI.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register(RegisterUserDTO registerUserDTO) 
+        public async Task<APIResponse<AuthReponse>> Register(RegisterUserDTO registerUserDTO) 
         {
-            var result = await _AuthManager.Register(registerUserDTO);
-            if (result.IsSuccess)
-                return Ok(result);
-
-            return BadRequest(result);
+         
+            return await _AuthManager.Register(registerUserDTO);
+            
         }
 
-        [HttpPost("Login")]
-        public async Task<IActionResult> Login(LoginDto loginDto) 
-        {
-            var result = await _AuthManager.Login(loginDto);
-            if (result.IsSuccess)
-                return Ok(result);
 
-            return BadRequest(result);
+        [HttpPost("Login")]
+        public async Task<APIResponse<AuthReponse>> Login(LoginDto loginDto) 
+        {
+            return await _AuthManager.Login(loginDto);
+            
+             
 
         }
     }

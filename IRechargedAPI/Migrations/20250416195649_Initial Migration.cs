@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace IRecharge_API.Migrations.IRechargeAuthDBMigrations
+namespace IRechargedAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class JwtToken : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

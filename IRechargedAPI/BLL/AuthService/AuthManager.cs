@@ -117,7 +117,7 @@ namespace IRecharge_API.BLL.AuthService
 
                 // Create user with password this will properly hash the user password
                 _logger.LogInformation($"Creating identity user for {registerUserDTO.Email}");
-                var creationResult = await _userManager.CreateAsync(identityUser, registerUserDTO.Password);
+                var creationResult = await _userManager.CreateAsync(identityUser);
                 if (!creationResult.Succeeded)
                 {
                     _logger.LogError($"Failed to create user {registerUserDTO.Email}. Errors: {string.Join(", ", creationResult.Errors.Select(e => e.Description))}");
@@ -132,18 +132,21 @@ namespace IRecharge_API.BLL.AuthService
                 var normalizedRoleName = registerUserDTO.role?.Trim().ToUpper();
                 if (string.IsNullOrWhiteSpace(normalizedRoleName))
                 {
-                    normalizedRoleName = "USER"; // Default role
+                    normalizedRoleName = "READER,WRITER"; // Default role
                 }
 
                 _logger.LogInformation($"Processing role {normalizedRoleName} for user {registerUserDTO.Email}");
+                
                 var roleExist = await _roleManager.RoleExistsAsync(normalizedRoleName);
                 if (!roleExist)
                 {
                     _logger.LogInformation($"Creating new role: {normalizedRoleName}");
+
                     var roleCreationResult = await _roleManager.CreateAsync(new IdentityRole(normalizedRoleName));
                     if (!roleCreationResult.Succeeded)
                     {
                         _logger.LogError($"Failed to create role {normalizedRoleName} for {registerUserDTO.UserName}");
+                       
                         await transaction.RollbackAsync();
                         response.IsSuccess = false;
                         response.ErrorMessages.Add("Failed to create role, Please try again");
@@ -199,7 +202,7 @@ namespace IRecharge_API.BLL.AuthService
                     Email = registerUserDTO.Email,
                     PhoneNumber = registerUserDTO.PhoneNumber,
                     WalletBalance = registerUserDTO.WalletBalance,
-                    EmailConfirmationToken = emailConfirmationToken  // Include this if you want to return it
+                    /*EmailConfirmationToken = emailConfirmationToken*/  // Include this if you want to return it
                 };
                 response.Data = authResponse;
                 response.IsSuccess = true;
@@ -217,9 +220,9 @@ namespace IRecharge_API.BLL.AuthService
         }
 
 
-        public async Task<APIResponse<object>> Login(LoginDto loginDTO)
+        public async Task<APIResponse<AuthReponse>> Login(LoginDto loginDTO)
         {
-            var response = new APIResponse<object>
+            var response = new APIResponse<AuthReponse>
             {
                 ErrorMessages = new List<string>()
             };
@@ -299,6 +302,24 @@ namespace IRecharge_API.BLL.AuthService
         private string IsValidPassword(string password)
         {
             // Ensure password has at least one uppercase letter, one digit, and one special character
+            if (string.IsNullOrWhiteSpace(password))
+                return "Password is required";
+
+            if (password.Length < 8)
+                return "Password must be at least 8 characters";
+
+            if (!password.Any(char.IsUpper))
+                return "Password must contain at least one uppercase letter";
+
+            if (!password.Any(char.IsLower))
+                return "Password must contain at least one lowercase letter";
+
+            if (!password.Any(char.IsDigit))
+                return "Password must contain at least one digit";
+
+            if (!password.Any(ch => !char.IsLetterOrDigit(ch)))
+                return "Password must contain at least one special character";
+
             var regex = new Regex(@"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+={}\[\]:;'<>?,./\\-]).+$");
             if (!regex.IsMatch(password))
             {

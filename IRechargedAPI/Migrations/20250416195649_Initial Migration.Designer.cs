@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace IRecharge_API.Migrations.IRechargeAuthDBMigrations
+namespace IRechargedAPI.Migrations
 {
     [DbContext(typeof(IRechargeAuthDB))]
-    [Migration("20250414184514_Second appsetting changes")]
-    partial class Secondappsettingchanges
+    [Migration("20250416195649_Initial Migration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

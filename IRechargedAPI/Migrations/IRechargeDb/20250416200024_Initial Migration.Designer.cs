@@ -4,16 +4,19 @@ using IRecharge_API.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace IRecharge_API.Migrations
+namespace IRechargedAPI.Migrations.IRechargeDb
 {
     [DbContext(typeof(IRechargeDbContext))]
-    partial class IRechargeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250416200024_Initial Migration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
