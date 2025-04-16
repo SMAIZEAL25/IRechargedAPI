@@ -20,16 +20,21 @@ namespace IRechargedAPI.Controllers
         public async Task<IActionResult> Register(RegisterUserDTO registerUserDTO) 
         {
             var result = await _AuthManager.Register(registerUserDTO);
-            return Ok(result);
-         
+            if (result.IsSuccess)
+                return Ok(result);
+
+            return BadRequest(result);
         }
 
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginDto loginDto) 
         {
             var result = await _AuthManager.Login(loginDto);
-            return Ok(result);
-         
+            if (result.IsSuccess)
+                return Ok(result);
+
+            return BadRequest(result);
+
         }
     }
 }

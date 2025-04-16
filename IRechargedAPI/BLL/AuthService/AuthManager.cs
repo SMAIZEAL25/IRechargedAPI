@@ -17,7 +17,7 @@ namespace IRecharge_API.BLL.AuthService
 {
     public class AuthManager : IAuthManager
     {
-        private readonly APIResponse<object> _response = new APIResponse<object>();
+        
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
@@ -49,9 +49,9 @@ namespace IRecharge_API.BLL.AuthService
 
 
 
-        public async Task<APIResponse<object>> Register(RegisterUserDTO registerUserDTO)
+        public async Task<APIResponse<AuthReponse>> Register(RegisterUserDTO registerUserDTO)
         {
-            var response = new APIResponse<object>
+            var response = new APIResponse<AuthReponse>
             {
                 ErrorMessages = new List<string>()
             };
@@ -199,9 +199,9 @@ namespace IRecharge_API.BLL.AuthService
                     Email = registerUserDTO.Email,
                     PhoneNumber = registerUserDTO.PhoneNumber,
                     WalletBalance = registerUserDTO.WalletBalance,
-                    EmailConfirmationToken = emailConfirmationToken // Include this if you want to return it
+                    EmailConfirmationToken = emailConfirmationToken  // Include this if you want to return it
                 };
-
+                response.Data = authResponse;
                 response.IsSuccess = true;
                 return response;
             }

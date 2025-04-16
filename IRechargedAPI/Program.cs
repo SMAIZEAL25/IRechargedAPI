@@ -12,6 +12,9 @@ using Serilog;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
 using Microsoft.OpenApi.Models;
+using System.Text.Json;
+using Serilog.Events;
+using Azure.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,8 +75,14 @@ builder.Services.AddHttpClient("DigitalVendorsUrl", client =>
     client.BaseAddress = new Uri("https://api3.digitalvendorz.com/api/");
 });
 
-// Serilog
-builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console().ReadFrom.Configuration(ctx.Configuration));
+// Serilog configuration with comprehensive health check suppression
+builder.Host.UseSerilog((ctx, lc) => lc
+    .WriteTo.Console()
+    .ReadFrom.Configuration(ctx.Configuration)
+    // ?? Add just this one line to block health check logs
+    .MinimumLevel.Override("Microsoft.AspNetCore.Diagnostics.HealthChecks", LogEventLevel.Fatal)
+);
+
 
 // Services
 builder.Services.AddTransient<IPurchaseService, PurchaseService>();
@@ -110,16 +119,6 @@ builder.Services.AddHealthChecks()
         tags: new[] { "database", "auth" }
     );
 
-builder.Services.AddHealthChecksUI(options =>
-{
-    options.AddHealthCheckEndpoint("API", "/health");
-    options.AddHealthCheckEndpoint("Main DB", "/health/maindb");
-    options.AddHealthCheckEndpoint("Auth DB", "/health/authdb");
-    options.SetEvaluationTimeInSeconds(10);
-    options.SetApiMaxActiveRequests(1);
-    options.MaximumHistoryEntriesPerEndpoint(50);
-})
-.AddSqlServerStorage(builder.Configuration.GetConnectionString("HealthChecksUI"));
 
 // Identity
 builder.Services.Configure<IdentityOptions>(options =>
@@ -169,34 +168,49 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseSerilogRequestLogging(options =>
+{
+    // Add this check to exclude health endpoints
+    options.GetLevel = (ctx, _, ex) =>
+        ctx.Request.Path.StartsWithSegments("/health") ?
+            LogEventLevel.Fatal : // Will NOT log
+            (ex != null ? LogEventLevel.Error : LogEventLevel.Information);
+});
+
+
 app.UseCors("HealthChecks");
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Health Checks endpoints
+
+// Helps to reduce console noise for health Checks
+
 app.MapHealthChecks("/health", new HealthCheckOptions
 {
     Predicate = _ => true,
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+    AllowCachingResponses = true // Reduce processing
 });
 
 app.MapHealthChecks("/health/maindb", new HealthCheckOptions
 {
     Predicate = reg => reg.Tags.Contains("database"),
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+    AllowCachingResponses = true
 });
 
 app.MapHealthChecks("/health/authdb", new HealthCheckOptions
 {
     Predicate = reg => reg.Tags.Contains("auth"),
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+    AllowCachingResponses = true
 });
-
 app.MapHealthChecksUI(options =>
 {
     options.UIPath = "/health-ui";
     options.ApiPath = "/health-api";
-}); // Add .RequireAuthorization() for productions
+});
 
 app.MapControllers();
 
