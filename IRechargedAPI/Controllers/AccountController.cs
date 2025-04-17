@@ -29,9 +29,7 @@ namespace IRechargedAPI.Controllers
         [HttpPost("Login")]
         public async Task<APIResponse<AuthReponse>> Login(LoginDto loginDto) 
         {
-            return await _AuthManager.Login(loginDto);
-            
-             
+            return await _AuthManager.Login(loginDto); 
 
         }
     }

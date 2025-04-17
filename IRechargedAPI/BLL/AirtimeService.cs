@@ -40,8 +40,7 @@ namespace IRecharge_API.BLL
                 // Create request
                 var client = _httpClientFactory.CreateClient();
                 var request = new HttpRequestMessage(
-                    HttpMethod.Post,
-                    "https://api3.digitalvendorz.com/api/airtime");
+                    HttpMethod.Post,"https://api3.digitalvendorz.com/api/airtime");
 
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
                 request.Content = new StringContent(

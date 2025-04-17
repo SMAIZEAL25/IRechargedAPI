@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using IRecharge_API.DTO;
 using IRecharge_API.Entities;
+using System.Net.NetworkInformation;
 
 namespace IRecharge_API.MapConfig
 {
@@ -8,7 +9,7 @@ namespace IRecharge_API.MapConfig
     {
         public MapConfig()
         {
-            CreateMap<User, RegisterUserDTO>().ReverseMap();
+            CreateMap<RegisterUserDTO, User>();
             CreateMap<User, LoginDto>().ReverseMap();
         }
     }

@@ -40,8 +40,8 @@ namespace IRecharge_API.DAL
         // This method is used to save a new user to the database.
         public void SaveChange(User registerUserDTO)
         {
-            var userEntity = mapper.Map<User>(registerUserDTO);
-            _context.Users.Add(userEntity);
+          
+            _context.Users.Add(registerUserDTO);
             _context.SaveChanges();
 
         }
@@ -50,6 +50,11 @@ namespace IRecharge_API.DAL
         public void UpdateUserAsync(User user)
         {
             var updateUserRecord = _context.Users.Update(user);
+        }
+
+        public async Task AddUserAsync(User user)
+        {
+            await _context.Users.AddAsync(user);
         }
 
     }

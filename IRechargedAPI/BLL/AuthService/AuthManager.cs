@@ -117,7 +117,7 @@ namespace IRecharge_API.BLL.AuthService
 
                 // Create user with password this will properly hash the user password
                 _logger.LogInformation($"Creating identity user for {registerUserDTO.Email}");
-                var creationResult = await _userManager.CreateAsync(identityUser);
+                var creationResult = await _userManager.CreateAsync(identityUser,registerUserDTO.Password);
                 if (!creationResult.Succeeded)
                 {
                     _logger.LogError($"Failed to create user {registerUserDTO.Email}. Errors: {string.Join(", ", creationResult.Errors.Select(e => e.Description))}");
@@ -172,6 +172,7 @@ namespace IRecharge_API.BLL.AuthService
                 _logger.LogInformation($"Creating application record for {registerUserDTO.Email}");
                 var userRecord = _mapper.Map<User>(registerUserDTO);
                 userRecord.IdentityUserId = identityUser.Id;
+
 
                 try
                 {

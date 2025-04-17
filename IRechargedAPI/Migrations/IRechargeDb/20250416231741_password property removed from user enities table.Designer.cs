@@ -4,6 +4,7 @@ using IRecharge_API.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IRechargedAPI.Migrations.IRechargeDb
 {
     [DbContext(typeof(IRechargeDbContext))]
-    partial class IRechargeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250416231741_password property removed from user enities table")]
+    partial class passwordpropertyremovedfromuserenitiestable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,10 +42,6 @@ namespace IRechargedAPI.Migrations.IRechargeDb
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -52,7 +51,6 @@ namespace IRechargedAPI.Migrations.IRechargeDb
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("WalletBalance")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");

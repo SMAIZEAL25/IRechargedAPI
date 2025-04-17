@@ -15,5 +15,6 @@ namespace IRecharge_API.DAL
 
         void SaveChange(User registerUserDTO);
 
+        Task AddUserAsync(User user);
     }
 }
