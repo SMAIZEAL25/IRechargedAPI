@@ -80,8 +80,8 @@ builder.Services.AddHttpClient("DigitalVendorApi", client =>
     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     client.DefaultRequestHeaders.Add("User-Agent", "IRechargeAPI/1.0");
 
-    // Timeout settings define how long the user wait
-    client.Timeout = TimeSpan.FromSeconds(30);
+    // Timeout settings define how long the user wait before timingout 
+    client.Timeout = TimeSpan.FromSeconds(40);
 });
 
 // Serilog configuration with comprehensive health check suppression

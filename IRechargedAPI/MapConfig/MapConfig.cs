@@ -10,6 +10,8 @@ namespace IRecharge_API.MapConfig
         public MapConfig()
         {
             CreateMap<RegisterUserDTO, User>();
+                 //.ForMember(dest => dest.Password, opt => opt.Ignore());
+
             CreateMap<User, LoginDto>().ReverseMap();
         }
     }

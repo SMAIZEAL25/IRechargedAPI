@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IRechargedAPI.Migrations.IRechargeDb
 {
     [DbContext(typeof(IRechargeDbContext))]
-    [Migration("20250416231741_password property removed from user enities table")]
-    partial class passwordpropertyremovedfromuserenitiestable
+    [Migration("20250418112854_Check if property was properly inserted")]
+    partial class Checkifpropertywasproperlyinserted
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,7 @@ namespace IRechargedAPI.Migrations.IRechargeDb
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("WalletBalance")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");

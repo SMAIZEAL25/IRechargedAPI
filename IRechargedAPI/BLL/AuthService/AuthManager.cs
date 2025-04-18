@@ -111,9 +111,11 @@ namespace IRecharge_API.BLL.AuthService
                 {
                     UserName = registerUserDTO.UserName,
                     Email = registerUserDTO.Email,
+                    PhoneNumber = registerUserDTO.PhoneNumber,
                     EmailConfirmed = false // require email confirmation that why isset to false until confirmed 
                 };
 
+               
 
                 // Create user with password this will properly hash the user password
                 _logger.LogInformation($"Creating identity user for {registerUserDTO.Email}");
@@ -168,10 +170,13 @@ namespace IRecharge_API.BLL.AuthService
                     return response;
                 }
 
+                
+
                 // Map RegisterUserDto to domain entities and Create application user record
                 _logger.LogInformation($"Creating application record for {registerUserDTO.Email}");
-                var userRecord = _mapper.Map<User>(registerUserDTO);
+                var userRecord = _mapper.Map<User>(registerUserDTO) ;
                 userRecord.IdentityUserId = identityUser.Id;
+                
 
 
                 try

@@ -9,14 +9,13 @@ namespace IRecharge_API.DAL
     {
         // The IRechargeDbContext is used to interact with the database.
         private readonly IRechargeDbContext _context;
-        // The IMapper is used for mapping between DTOs and entities.
-        private readonly IMapper mapper;
+       
 
         // Constructor that initializes the UserRepository with a database context and an AutoMapper instance.
-        public UserRepository(IRechargeDbContext context, IMapper mapper)
+        public UserRepository(IRechargeDbContext context)
         {
             _context = context;
-            this.mapper = mapper;
+        
         }
 
         // This method retrieves a user by their username from the database.
@@ -40,7 +39,6 @@ namespace IRecharge_API.DAL
         // This method is used to save a new user to the database.
         public void SaveChange(User registerUserDTO)
         {
-          
             _context.Users.Add(registerUserDTO);
             _context.SaveChanges();
 
