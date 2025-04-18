@@ -11,20 +11,33 @@ namespace IRecharge_API.BLL
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly TokenServices _tokenService;
         private readonly ILogger<AirtimeService> _logger;
+        private readonly IConfiguration _configuration;
 
         public AirtimeService(
             IHttpClientFactory httpClientFactory,
             TokenServices tokenService,
-            ILogger<AirtimeService> logger)
+            ILogger<AirtimeService> logger, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
             _tokenService = tokenService;
             _logger = logger;
+            _configuration = configuration;
         }
 
         public async Task<DigitalVendorsReponseModel> PurchaseAirtime(VendAirtimeRequestModel requestModel)
         {
             var responseModel = new DigitalVendorsReponseModel();
+
+            // Get base URL from configuration
+            var baseUrl = _configuration["DigitalVendorsUrl:BaseUrl"];
+
+            if (string.IsNullOrEmpty(baseUrl))
+            {
+                responseModel.isSuccessful = false;
+                responseModel.responsemessage = "API base URL configuration missing";
+                _logger.LogError("DigitalVendorsUrl:BaseUrl is missing in configuration");
+                return responseModel;
+            }
 
             try
             {
@@ -37,31 +50,38 @@ namespace IRecharge_API.BLL
                     return responseModel;
                 }
 
-                // Create request
-                var client = _httpClientFactory.CreateClient();
-                var request = new HttpRequestMessage(
-                    HttpMethod.Post,"https://api3.digitalvendorz.com/api/airtime");
+                // Use named client
+                var client = _httpClientFactory.CreateClient("DigitalVendorApi");
+
+                // Construct full endpoint URL
+                var requestUrl = $"{baseUrl.TrimEnd('/')}/airtime";
+
+                // Create and configure request
+                var request = new HttpRequestMessage(HttpMethod.Post, requestUrl)
+                {
+                    Content = new StringContent(
+                        JsonConvert.SerializeObject(requestModel),
+                        Encoding.UTF8,
+                        "application/json")
+                };
 
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
-                request.Content = new StringContent(
-                    JsonConvert.SerializeObject(requestModel),
-                    Encoding.UTF8,
-                    "application/json");
+                request.Headers.Add("X-Requested-With", "XMLHttpRequest");
 
-                // Send request
+                // Execute request
                 var response = await client.SendAsync(request);
                 var responseString = await response.Content.ReadAsStringAsync();
 
-                // Handle response
+                _logger.LogDebug($"API Response: {response.StatusCode} - {responseString}");
+
                 if (!response.IsSuccessStatusCode)
                 {
                     responseModel.isSuccessful = false;
-                    responseModel.responsemessage = $"API request failed ({(int)response.StatusCode}): {responseString}";
+                    responseModel.responsemessage = $"API request failed ({(int)response.StatusCode})";
                     return responseModel;
                 }
 
-                var apiResponse = JsonConvert.DeserializeObject<DigitalVendorsReponseModel>(responseString);
-                return apiResponse ?? responseModel;
+                return JsonConvert.DeserializeObject<DigitalVendorsReponseModel>(responseString) ?? responseModel;
             }
             catch (Exception ex)
             {

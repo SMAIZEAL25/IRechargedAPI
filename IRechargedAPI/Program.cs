@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using System.Text.Json;
 using Serilog.Events;
 using Azure.Core;
+using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +26,7 @@ builder.Services.AddEndpointsApiExplorer();
 // Swagger Authorization UI
 builder.Services.AddSwaggerGen(Options =>
 {
-    Options.SwaggerDoc("v1", new() { Title = "SchoolManagementAPI", Version = "v1" });
+    Options.SwaggerDoc("v1", new() { Title = "IRechargedAPI", Version = "v1" });
     Options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -70,9 +71,17 @@ builder.Services.AddDbContext<IRechargeAuthDB>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("IRechargeAuthDB")));
 
 // Register HttpClient
-builder.Services.AddHttpClient("DigitalVendorsUrl", client =>
+builder.Services.AddHttpClient("DigitalVendorApi", client =>
 {
     client.BaseAddress = new Uri("https://api3.digitalvendorz.com/api/");
+
+    // Required headers to avoid 406
+    client.DefaultRequestHeaders.Accept.Clear();
+    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+    client.DefaultRequestHeaders.Add("User-Agent", "IRechargeAPI/1.0");
+
+    // Timeout settings define how long the user wait
+    client.Timeout = TimeSpan.FromSeconds(30);
 });
 
 // Serilog configuration with comprehensive health check suppression

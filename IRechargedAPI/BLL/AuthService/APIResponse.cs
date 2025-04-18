@@ -12,7 +12,6 @@ namespace IRecharge_API.BLL.AuthService
         public List<string> ErrorMessages { get; set; } = new List<string>();
         public string Token { get; set; }
         public DateTime ExpiresIn { get; set; }
-
         public T Data { get; set; }
 
     }
