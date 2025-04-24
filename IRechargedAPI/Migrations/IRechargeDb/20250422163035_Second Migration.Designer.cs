@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IRechargedAPI.Migrations.IRechargeDb
 {
     [DbContext(typeof(IRechargeDbContext))]
-    [Migration("20250417000553_RemovePasswordFromUsers")]
-    partial class RemovePasswordFromUsers
+    [Migration("20250422163035_Second Migration")]
+    partial class SecondMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,10 +39,6 @@ namespace IRechargedAPI.Migrations.IRechargeDb
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IdentityUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

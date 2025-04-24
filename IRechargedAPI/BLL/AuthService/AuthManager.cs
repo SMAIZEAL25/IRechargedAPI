@@ -174,9 +174,15 @@ namespace IRecharge_API.BLL.AuthService
 
                 // Map RegisterUserDto to domain entities and Create application user record
                 _logger.LogInformation($"Creating application record for {registerUserDTO.Email}");
-                var userRecord = _mapper.Map<User>(registerUserDTO) ;
+                var userRecord = new User 
+                { 
+                    Email = registerUserDTO.Email,
+                    UserName = registerUserDTO.UserName,
+                    PhoneNumber = registerUserDTO.PhoneNumber,
+                    WalletBalance = registerUserDTO.WalletBalance, 
+                    
+                };
                 userRecord.IdentityUserId = identityUser.Id;
-                
 
 
                 try

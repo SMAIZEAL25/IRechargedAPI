@@ -18,8 +18,7 @@ namespace IRechargedAPI.Migrations.IRechargeDb
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    WalletBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    WalletBalance = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IdentityUserId = table.Column<string>(type: "nvarchar(max)", nullable: false)

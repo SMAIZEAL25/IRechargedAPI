@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IRechargedAPI.Migrations.IRechargeDb
 {
     [DbContext(typeof(IRechargeDbContext))]
-    [Migration("20250418112854_Check if property was properly inserted")]
-    partial class Checkifpropertywasproperlyinserted
+    [Migration("20250422162253_Initial Migration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
