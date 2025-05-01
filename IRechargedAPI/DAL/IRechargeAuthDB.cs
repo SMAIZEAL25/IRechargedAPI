@@ -19,12 +19,14 @@ namespace IRecharge_API.DAL
             var readerId = "5bc84df1-b43d-4830-b8b8-ccf750839ae2";
             var writerId = "d76b6975-c526-4dc1-af45-22c4bb248f54";
 
+
+
             var roles = new List<IdentityRole>
             {
                 new IdentityRole
                 {
                     Id = readerId,
-                    ConcurrencyStamp = readerId,
+                    ConcurrencyStamp = readerId, //ConcurrencyStamp = Guid.NewGuid().ToString(),
                     Name = "Reader",
                     NormalizedName = "Reader".ToUpper(),
                 },

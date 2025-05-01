@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IRechargedAPI.Migrations
 {
     [DbContext(typeof(IRechargeAuthDB))]
-    [Migration("20250416195649_Initial Migration")]
+    [Migration("20250426074856_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />

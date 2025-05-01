@@ -145,7 +145,9 @@ builder.Services.Configure<IdentityOptions>(options =>
     //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
 });
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentityCore<IdentityUser>()
+    .AddRoles<IdentityRole>()
+    .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("Default")
     .AddEntityFrameworkStores<IRechargeAuthDB>()
     .AddDefaultTokenProviders();
 
