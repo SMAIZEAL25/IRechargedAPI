@@ -137,26 +137,30 @@ namespace IRecharge_API.BLL.AuthService
                     normalizedRoleName = "READER,WRITER"; // Default role
                 }
 
-                _logger.LogInformation($"Processing role {normalizedRoleName} for user {registerUserDTO.Email}");
-                
-                var roleExist = await _roleManager.RoleExistsAsync(normalizedRoleName);
-                if (!roleExist)
-                {
-                    _logger.LogInformation($"Creating new role: {normalizedRoleName}");
+                // spilit the role by comma
+                var rolesToAssign = normalizedRoleName.Split(',').Select(r => r.Trim()).ToList(); 
 
-                    var roleCreationResult = await _roleManager.CreateAsync(new IdentityRole(normalizedRoleName));
-                    if (!roleCreationResult.Succeeded)
+                _logger.LogInformation($"Processing role {normalizedRoleName} for user {registerUserDTO.Email}");
+                foreach (var role in rolesToAssign)
+                {
+                    var roleExist = await _roleManager.RoleExistsAsync(normalizedRoleName);
+                    if (!roleExist)
                     {
-                        _logger.LogError($"Failed to create role {normalizedRoleName} for {registerUserDTO.UserName}");
-                       
-                        await transaction.RollbackAsync();
-                        response.IsSuccess = false;
-                        response.ErrorMessages.Add("Failed to create role, Please try again");
-                        response.ErrorMessages.AddRange(roleCreationResult.Errors.Select(e => e.Description));
-                        return response;
+                        _logger.LogInformation($"Creating new role: {normalizedRoleName}");
+
+                        var roleCreationResult = await _roleManager.CreateAsync(new IdentityRole(normalizedRoleName));
+                        if (!roleCreationResult.Succeeded)
+                        {
+                            _logger.LogError($"Failed to create role {normalizedRoleName} for {registerUserDTO.UserName}");
+
+                            await transaction.RollbackAsync();
+                            response.IsSuccess = false;
+                            response.ErrorMessages.Add("Failed to create role, Please try again");
+                            response.ErrorMessages.AddRange(roleCreationResult.Errors.Select(e => e.Description));
+                            return response;
+                        }
                     }
                 }
-
 
 
                 // Add user to role
@@ -277,6 +281,7 @@ namespace IRecharge_API.BLL.AuthService
 
             // Check roles
             var roles = (await _userManager.GetRolesAsync(user)).ToList();
+            _logger.LogInformation("User {Email} has roles: {Roles}", loginDTO.Email, string.Join(", ", roles));
             if (!roles.Any(r => r == "Reader" || r == "Writer"))
             {
                 _logger.LogWarning("User does not have the required role for email {Email}", loginDTO.Email);

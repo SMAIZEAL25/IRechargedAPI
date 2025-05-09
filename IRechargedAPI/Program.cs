@@ -88,6 +88,8 @@ builder.Services.AddHttpClient("DigitalVendorApi", client =>
 builder.Host.UseSerilog((ctx, lc) => lc
     .WriteTo.Console()
     .ReadFrom.Configuration(ctx.Configuration)
+    .Filter.ByExcluding(LogEvent => LogEvent.Properties.ContainsKey
+    ("RequestBody") && LogEvent.Properties["RequestBody"].ToString().Contains("password")) // helps serilog to avoid logging sensitive information 
     // 👇 Add just this one line to block health check logs
     .MinimumLevel.Override("Microsoft.AspNetCore.Diagnostics.HealthChecks", LogEventLevel.Fatal)
 );
