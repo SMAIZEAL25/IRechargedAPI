@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using IRecharge_API.DTO;
 using IRecharge_API.Entities;
+using IRechargedAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace IRecharge_API.DAL
@@ -9,13 +10,13 @@ namespace IRecharge_API.DAL
     {
         // The IRechargeDbContext is used to interact with the database.
         private readonly IRechargeDbContext _context;
-       
+
 
         // Constructor that initializes the UserRepository with a database context and an AutoMapper instance.
         public UserRepository(IRechargeDbContext context)
         {
             _context = context;
-        
+
         }
 
         // This method retrieves a user by their username from the database.
@@ -55,5 +56,28 @@ namespace IRecharge_API.DAL
             await _context.Users.AddAsync(user);
         }
 
+        public async Task<Wallet?> GetWalletAsync(Guid userId)
+        {
+            return await _context.wallets.FirstOrDefaultAsync(w => w.UserId == userId);
+        }
+
+        public async Task<Wallet> CreateWalletAsync(Guid Userid)
+        {
+            var wallet = new Wallet
+            {
+                UserId = Userid,
+                Balance = 0.00m
+            };
+
+            _context.wallets.Add(wallet);
+            await _context.SaveChangesAsync();
+            return wallet;
+        }
+
+        public void UpdateWalletAsync(Wallet wallet)
+        {
+            var response = _context.wallets.Update(wallet);
+            _context.SaveChanges();
+        }
     }
 }

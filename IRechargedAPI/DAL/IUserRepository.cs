@@ -1,5 +1,6 @@
 ﻿using IRecharge_API.DTO;
 using IRecharge_API.Entities;
+using IRechargedAPI.Entities;
 
 namespace IRecharge_API.DAL
 {
@@ -16,5 +17,11 @@ namespace IRecharge_API.DAL
         void SaveChange(User registerUserDTO);
 
         Task AddUserAsync(User user);
+
+        Task<Wallet?> GetWalletAsync(Guid userId);
+
+        Task<Wallet> CreateWalletAsync(Guid Userid);
+
+        void UpdateWalletAsync(Wallet amount);
     }
 }

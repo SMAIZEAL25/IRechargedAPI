@@ -1,4 +1,6 @@
-﻿namespace IRecharge_API.Entities
+﻿using IRechargedAPI.Entities;
+
+namespace IRecharge_API.Entities
 {
     public class User
     {
@@ -15,5 +17,7 @@
         public DateTime DateCreated { get; set; }
 
         public string IdentityUserId { get; set; }
+
+        public Wallet Wallet { get; set; }
     }
 }

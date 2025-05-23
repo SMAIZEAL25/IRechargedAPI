@@ -2,6 +2,7 @@
 using IRecharge_API.DTO;
 using IRecharge_API.ExternalServices;
 using IRecharge_API.ExternalServices.Models;
+using IRechargedAPI.Entities;
 using System.Net.Http.Headers;
 
 namespace IRecharge_API.BLL
@@ -99,10 +100,24 @@ namespace IRecharge_API.BLL
             }
         }
 
-
-        public async Task<ResponseModel> PurchaseData(PurchaseDataRequestDTO purchaseDataRequestDTO)
+        public async Task<decimal> GetBalanceAsync(Guid userId)
         {
-            throw new NotImplementedException();
+            var wallet = await _userRepository.GetWalletAsync(userId);
+            return wallet?.Balance ?? 0.00m;
         }
+
+        public async Task<Wallet> TopUpWalletAsync(Guid userId, decimal amount)
+        {
+            var wallet = await _userRepository.GetWalletAsync(userId);
+            if (wallet == null)
+            {
+                wallet = await _userRepository.CreateWalletAsync(userId);
+            }
+            wallet.Balance += amount;
+            _userRepository.UpdateWalletAsync(wallet); // Corrected method to update Wallet instead of User  
+            return wallet;
+        }
+
+      
     }
 }
