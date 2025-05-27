@@ -4,6 +4,7 @@ using IRecharge_API.DAL;
 using IRecharge_API.DTO;
 using IRecharge_API.Entities;
 using IRechargedAPI.BLL.AuthService;
+using IRechargedAPI.DAL;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.ComponentModel.DataAnnotations;
@@ -25,6 +26,7 @@ namespace IRecharge_API.BLL.AuthService
         private readonly ILogger<AuthManager> _logger;
         private readonly IUserRepository _userRepository;
         private readonly IRechargeDbContext _rechargeDbContext;
+        private readonly IUnitOfWork _unitOfWork;
 
         public AuthManager(
             UserManager<IdentityUser> userManager,
@@ -33,7 +35,8 @@ namespace IRecharge_API.BLL.AuthService
             IConfiguration configuration,
             ILogger<AuthManager> logger,
             IUserRepository userRepository,
-            IRechargeDbContext rechargeDbContext
+            IRechargeDbContext rechargeDbContext,
+            IUnitOfWork unitOfWork
            
 
         )
@@ -45,6 +48,7 @@ namespace IRecharge_API.BLL.AuthService
             _logger = logger;
             _userRepository = userRepository;
             _rechargeDbContext = rechargeDbContext;
+            _unitOfWork = unitOfWork;
         }
 
 
@@ -191,7 +195,8 @@ namespace IRecharge_API.BLL.AuthService
 
                 try
                 {
-                    _userRepository.SaveChange(userRecord);
+                    //_userRepository.SaveChange(userRecord);
+                    _unitOfWork.SaveChangeAsync(userRecord);
                 }
                 catch (Exception ex)
                 {

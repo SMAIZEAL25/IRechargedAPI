@@ -42,7 +42,6 @@ namespace IRecharge_API.Controllers
         }
 
         [HttpGet("getuserbalance")]
-
         public async Task<IActionResult> GetUserBalance(Guid Userid)
         {
             var user = await _purchaseService.GetBalanceAsync(Userid);
@@ -55,7 +54,6 @@ namespace IRecharge_API.Controllers
 
 
         [HttpPost  ("TopUpUserWallet")]
-
         public async Task<IActionResult> TopUpUserWallet([FromBody] Guid UserId)
         {
             var result = await _purchaseService.TopUpWalletAsync(UserId);

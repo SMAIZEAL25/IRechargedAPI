@@ -16,6 +16,7 @@ using System.Text.Json;
 using Serilog.Events;
 using Azure.Core;
 using System.Net.Http.Headers;
+using IRechargedAPI.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -98,6 +99,7 @@ builder.Host.UseSerilog((ctx, lc) => lc
 // Services
 builder.Services.AddTransient<IPurchaseService, PurchaseService>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<IDigitalVendors, DigitalVendorsAPI>();
 builder.Services.AddScoped<IAuthManager, AuthManager>();
 builder.Services.AddScoped<AirtimeService>();
