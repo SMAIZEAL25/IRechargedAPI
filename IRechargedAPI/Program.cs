@@ -1,13 +1,8 @@
-﻿using IRecharge_API.BLL;
-using IRecharge_API.DAL;
-using IRecharge_API.ExternalServices;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
-using IRecharge_API.BLL.AuthService;
-using IRecharge_API.MapConfig;
 using Serilog;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
@@ -16,7 +11,11 @@ using System.Text.Json;
 using Serilog.Events;
 using Azure.Core;
 using System.Net.Http.Headers;
-using IRechargedAPI.DAL;
+using IRechargedAPI.Infrastruture.ExternalServices;
+using IRechargedAPI.Presentation.MapConfig;
+using IRechargedAPI.Infrastruture.BLL;
+using IRechargedAPI.Infrastruture.BLL.AuthService;
+using IRechargedAPI.Domian.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
